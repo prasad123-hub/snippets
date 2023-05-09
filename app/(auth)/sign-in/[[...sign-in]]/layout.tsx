@@ -5,7 +5,7 @@ interface LandingPageLayoutProps {
   children: React.ReactNode;
 }
 
-export default async function LandingPageLayout({
+export default async function SignInPageLayout({
   children,
 }: LandingPageLayoutProps) {
   return (
@@ -13,7 +13,9 @@ export default async function LandingPageLayout({
       <div className="py-6 border-b">
         <MainNav />
       </div>
-      <main className="max-w-7xl mx-auto">{children}</main>
+      <main className="max-w-7xl mx-auto flex items-center justify-center min-h-[calc(100vh-100px)]">
+        {children}
+      </main>
       <hr />
       <SiteFooter />
     </div>
