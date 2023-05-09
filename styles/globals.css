@@ -2,3 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
+.CodeMirror__Main__Editor div {
+    @apply block px-1 pb-1 whitespace-pre-wrap break-normal break-words;
+  }
