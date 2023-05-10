@@ -6,9 +6,9 @@ import { redirect } from "next/navigation";
 export default async function SavedSnippet() {
   const { userId } = auth();
 
-  if (!userId) {
-    redirect("/sign-in");
-  }
+  // if (!sessionId) {
+  //   redirect("/");
+  // }
 
   const snippets = await db.snippet.findMany({
     where: {
