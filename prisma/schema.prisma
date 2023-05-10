@@ -14,7 +14,7 @@ datasource db {
 model Snippet {
     id        String   @id @default(cuid())
     title     String
-    code      String
+    code      String   @db.LongText
     ownerId   String
     createdAt DateTime @default(now())
 

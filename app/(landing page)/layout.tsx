@@ -9,7 +9,7 @@ export default async function LandingPageLayout({
   children,
 }: LandingPageLayoutProps) {
   return (
-    <div>
+    <div className="flex h-screen flex-col justify-between">
       <div className="py-6 border-b">
         <MainNav />
       </div>

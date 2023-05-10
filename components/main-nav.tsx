@@ -7,16 +7,12 @@ import { UserButton, useUser } from "@clerk/nextjs";
 
 const menuItems = [
   {
-    name: "Home",
-    href: "#",
+    name: "Dashboard",
+    href: "/dashboard",
   },
   {
-    name: "About",
-    href: "#",
-  },
-  {
-    name: "Contact",
-    href: "#",
+    name: "Saved Snippets",
+    href: "/dashboard/saved-snippet",
   },
 ];
 

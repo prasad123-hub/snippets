@@ -12,6 +12,7 @@
   "dependencies": {
     "@clerk/nextjs": "^4.17.1",
     "@codemirror/view": "^6.11.0",
+    "@monaco-editor/react": "^4.5.1",
     "@prisma/client": "4.14.0",
     "@types/node": "20.1.0",
     "@types/react": "18.2.6",

@@ -3,7 +3,7 @@ import { TerminalSquare } from "lucide-react";
 
 export function SiteFooter() {
   return (
-    <section className="relative overflow-hidden bg-white py-8">
+    <section className="relative overflow-hidden bg-white py-8 border-t pb-12">
       <div className="container relative z-10 mx-auto px-4">
         <div className="-m-8 flex flex-wrap items-center justify-between">
           <div className="w-auto p-8">

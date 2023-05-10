@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { use } from "react";
 import { langs } from "@uiw/codemirror-extensions-langs";
 import * as themes from "@uiw/codemirror-themes-all";
 import CodeMirror from "@uiw/react-codemirror";
@@ -9,6 +9,7 @@ import { format } from "@/lib/format";
 import exportAsImage from "@/lib/download";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import { useAuth } from "@clerk/nextjs";
 
 export const DEFAULT_BASE_SETUP = {
   foldGutter: false,
@@ -23,21 +24,13 @@ export const DEFAULT_BASE_SETUP = {
 export const clsx = (...classNames: string[]) =>
   classNames.filter(Boolean).join(" ");
 
-export function CodeEditor({ userId }: { userId: string }) {
+export function CodeEditor() {
+  const { userId } = useAuth();
   const router = useRouter();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const [fileName, setFileName] = React.useState("Untitled");
-  const [code, setCode] = React.useState(`function makeFunc() {
-    const name = "Mozilla";
-    function displayName() {
-      console.log(name);
-    }
-    return displayName;
-  }
-  
-  const myFunc = makeFunc();
-  myFunc();
-  `);
+  const [title, setTitle] = React.useState("Untitled");
+  // const value = localStorage.getItem("myValue") || 'console.log("Hello World")';
+  const [code, setCode] = React.useState("Something");
 
   async function handleSave() {
     setIsLoading(true);
@@ -47,21 +40,22 @@ export function CodeEditor({ userId }: { userId: string }) {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        code,
-        fileName,
-        userId,
+        code: code,
+        title: title,
+        ownerId: userId,
       }),
     });
     if (res.ok) {
       setIsLoading(false);
-      toast.success("Snippet created successfully");
-      router.push("/");
+      toast.success("Snippet saved successfully");
+      router.push("/dashboard");
     } else {
       setIsLoading(false);
-      toast.error("Error creating snippet");
-      console.log("Error creating snippet");
+      toast.error("Something went wrong");
     }
   }
+
+  console.log("user cha id", userId);
 
   return (
     <div className="border p-10 roounded-md w-full mt-10">
@@ -77,7 +71,7 @@ export function CodeEditor({ userId }: { userId: string }) {
         <CodeMirror
           className={clsx("CodeMirror__Main__Editor")}
           theme={themes["githubDark"]}
-          value={format(code)}
+          value={code ? code : 'console.log("Hello World")'}
           extensions={[langs.javascript(), EditorView.lineWrapping]}
           style={{
             fontSize: "14px",
@@ -100,12 +94,12 @@ export function CodeEditor({ userId }: { userId: string }) {
           placeholder="Enter File Name"
           onChange={(e) => {
             e.preventDefault();
-            setFileName(e.target.value);
+            setTitle(e.target.value);
           }}
         ></input>
         <button
           onClick={() => {
-            exportAsImage(document.getElementById("#snippet"), fileName);
+            exportAsImage(document.getElementById("#snippet"), title);
           }}
           type="button"
           className="rounded-md border border-black/30 px-3 py-2 text-sm font-semibold text-black shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"

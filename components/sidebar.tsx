@@ -5,11 +5,8 @@ import Link from "next/link";
 
 export function Sidebar() {
   return (
-    <aside className="flex h-screen w-64 flex-col overflow-y-auto border-r bg-white px-5 py-8">
-      <Link href="/">
-        <TerminalSquare size={30} />
-      </Link>
-      <div className="mt-6 flex flex-1 flex-col justify-between">
+    <aside className="w-64 min-h-min border-r bg-white px-5 py-8">
+      <div className="mt-6 flex h-full flex-col justify-between">
         <nav className="-mx-3 space-y-6 ">
           <div className="space-y-3 ">
             <label className="px-3 text-xs font-semibold uppercase text-gray-900">
@@ -31,9 +28,6 @@ export function Sidebar() {
             </Link>
           </div>
         </nav>
-        <div>
-          <UserButton />
-        </div>
       </div>
     </aside>
   );
