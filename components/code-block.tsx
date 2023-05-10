@@ -30,7 +30,23 @@ export function CodeEditor() {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [title, setTitle] = React.useState("Untitled");
   // const value = localStorage.getItem("myValue") || 'console.log("Hello World")';
-  const [code, setCode] = React.useState("Something");
+  const [code, setCode] = React.useState(`
+  import * as React from 'react'
+  import { ArrowLeft } from 'lucide-react'
+  
+  export function LeadingIconButtons() {
+    return (
+      <button
+        type="button"
+        className="inline-flex items-center rounded-md bg-black px-3 py-2 text-sm font-semibold text-white hover:bg-black/80"
+      >
+        <ArrowLeft className="mr-2 h-4 w-4" />
+        Button Text
+      </button>
+    )
+  }
+  
+  `);
 
   async function handleSave() {
     setIsLoading(true);
@@ -71,7 +87,7 @@ export function CodeEditor() {
         <CodeMirror
           className={clsx("CodeMirror__Main__Editor")}
           theme={themes["githubDark"]}
-          value={code ? code : 'console.log("Hello World")'}
+          value={format(code)}
           extensions={[langs.javascript(), EditorView.lineWrapping]}
           style={{
             fontSize: "14px",

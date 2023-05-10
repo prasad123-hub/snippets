@@ -11,10 +11,6 @@ export async function POST(request: Request) {
 
     const json = await request.json();
 
-    console.log("code", json.code);
-    console.log("title", json.title);
-    console.log("ownerId", json.ownerId);
-
     const newSnippet = await db.snippet.create({
       data: {
         title: json.title,
@@ -22,8 +18,6 @@ export async function POST(request: Request) {
         ownerId: json.ownerId,
       },
     });
-
-    console.log("newSnippet", newSnippet);
 
     return new Response(JSON.stringify({ message: "Snippet created" }));
   } catch (error) {
