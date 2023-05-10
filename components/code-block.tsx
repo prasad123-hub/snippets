@@ -71,8 +71,6 @@ export function CodeEditor() {
     }
   }
 
-  console.log("user cha id", userId);
-
   return (
     <div className="border p-10 roounded-md w-full mt-10">
       <div
