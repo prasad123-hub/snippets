@@ -46,8 +46,6 @@ export function Table({ snippetsArray }: any) {
                         <Link href={`/dashboard/saved-snippet/${snippet.id}`}>
                           View
                         </Link>
-
-                        <span className="text-red-600">Delete</span>
                       </td>
                     </tr>
                   )
