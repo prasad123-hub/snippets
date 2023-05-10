@@ -1,0 +1,22 @@
+// schema.prisma
+
+generator client {
+    provider        = "prisma-client-js"
+    previewFeatures = ["jsonProtocol"]
+}
+
+datasource db {
+    provider     = "mysql"
+    url          = env("DATABASE_URL")
+    relationMode = "prisma"
+}
+
+model Snippet {
+    id        String   @id @default(cuid())
+    title     String
+    code      String
+    ownerId   String
+    createdAt DateTime @default(now())
+
+    @@map("snippets")
+}

@@ -7,6 +7,8 @@ import CodeMirror from "@uiw/react-codemirror";
 import { EditorView } from "@codemirror/view";
 import { format } from "@/lib/format";
 import exportAsImage from "@/lib/download";
+import { useRouter } from "next/navigation";
+import { toast } from "react-hot-toast";
 
 export const DEFAULT_BASE_SETUP = {
   foldGutter: false,
@@ -21,7 +23,9 @@ export const DEFAULT_BASE_SETUP = {
 export const clsx = (...classNames: string[]) =>
   classNames.filter(Boolean).join(" ");
 
-export function CodeEditor() {
+export function CodeEditor({ userId }: { userId: string }) {
+  const router = useRouter();
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [fileName, setFileName] = React.useState("Untitled");
   const [code, setCode] = React.useState(`function makeFunc() {
     const name = "Mozilla";
@@ -34,6 +38,31 @@ export function CodeEditor() {
   const myFunc = makeFunc();
   myFunc();
   `);
+
+  async function handleSave() {
+    setIsLoading(true);
+    const res = await fetch("/api/snippet", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        code,
+        fileName,
+        userId,
+      }),
+    });
+    if (res.ok) {
+      setIsLoading(false);
+      toast.success("Snippet created successfully");
+      router.push("/");
+    } else {
+      setIsLoading(false);
+      toast.error("Error creating snippet");
+      console.log("Error creating snippet");
+    }
+  }
+
   return (
     <div className="border p-10 roounded-md w-full mt-10">
       <div
@@ -52,7 +81,7 @@ export function CodeEditor() {
           extensions={[langs.javascript(), EditorView.lineWrapping]}
           style={{
             fontSize: "14px",
-            width: "600px",
+
             boxShadow: "0 0 0 1px rgba(0,0,0,.1)",
           }}
           basicSetup={{
@@ -84,10 +113,11 @@ export function CodeEditor() {
           Download
         </button>
         <button
-          type="button"
+          onClick={handleSave}
+          disabled={isLoading}
           className="rounded-md bg-black px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-black/80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-black"
         >
-          Save
+          {isLoading ? "Saving..." : "Save"}
         </button>
       </div>
     </div>

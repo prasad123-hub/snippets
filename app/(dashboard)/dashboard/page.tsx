@@ -1,6 +1,8 @@
 import { CodeEditor } from "@/components/code-block";
+import { auth } from "@clerk/nextjs";
 
 export default async function DashboardPage() {
+  const { userId } = auth();
   return (
     <div className="w-full">
       <h1 className="font-bold text-2xl md:text-3xl text-black">
@@ -13,7 +15,7 @@ export default async function DashboardPage() {
 
       {/* Editor */}
       <div>
-        <CodeEditor />
+        <CodeEditor userId={userId!} />
       </div>
     </div>
   );

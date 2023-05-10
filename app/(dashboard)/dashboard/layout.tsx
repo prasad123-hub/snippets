@@ -12,7 +12,7 @@ export default async function DashboarLayout({
     <div className="md:px-10">
       <div className="flex items-start">
         <Sidebar />
-        <main className="p-10">{children}</main>
+        <main className="p-10 w-full">{children}</main>
       </div>
       <hr />
       <SiteFooter />
