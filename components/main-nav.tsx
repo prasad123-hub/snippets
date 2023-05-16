@@ -1,9 +1,10 @@
 "use client";
 
-import React from "react";
-import { Menu, X, TerminalSquare } from "lucide-react";
+import React, { useEffect } from "react";
+import { Menu, X, TerminalSquare, User } from "lucide-react";
 import Link from "next/link";
-import { UserButton, useUser } from "@clerk/nextjs";
+import { appwrite } from "@/appwrite";
+import { UserDropdown } from "./user-dropdown";
 
 const menuItems = [
   {
@@ -17,12 +18,29 @@ const menuItems = [
 ];
 
 export function MainNav() {
-  const { isSignedIn } = useUser();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+  const [user, setUser] = React.useState<any>(null);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);
   };
+
+  // Get user details
+  useEffect(() => {
+    const promise = appwrite.account.get();
+
+    promise.then(
+      function (response) {
+        console.log(response);
+        setUser(response);
+      },
+      function (error) {
+        console.log(error);
+      }
+    );
+  }, []);
+
+  console.log(user);
 
   return (
     <div className="relative w-full bg-white">
@@ -50,8 +68,8 @@ export function MainNav() {
           </ul>
         </div>
         <div className="hidden lg:block">
-          {isSignedIn ? (
-            <UserButton />
+          {user ? (
+            <UserDropdown user={user} />
           ) : (
             <Link href="/sign-up">
               <button

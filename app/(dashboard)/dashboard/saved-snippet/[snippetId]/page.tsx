@@ -1,5 +1,5 @@
+import { appwrite } from "@/appwrite";
 import { SnippetCodeEditor } from "@/components/single-snippet";
-import { db } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 
 interface SingleSnippetProps {
@@ -9,17 +9,11 @@ interface SingleSnippetProps {
 }
 
 export default async function SingleSnippet({ params }: SingleSnippetProps) {
-  const snippet = await db.snippet.findUnique({
-    where: {
-      id: params.snippetId,
-    },
-    select: {
-      id: true,
-      title: true,
-      code: true,
-      ownerId: true,
-    },
-  });
+  const snippet = await appwrite.databases.getDocument(
+    `${process.env.NEXT_PUBLIC_REACT_APP_DATABASE_ID}`,
+    `${process.env.NEXT_PUBLIC_REACT_APP_COLLECTION_ID}`,
+    `${params.snippetId}`
+  );
 
   if (!snippet) {
     notFound();

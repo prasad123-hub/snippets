@@ -8,6 +8,7 @@ import { EditorView } from "@codemirror/view";
 import { format } from "@/lib/format";
 import { useRouter } from "next/navigation";
 import { toast } from "react-hot-toast";
+import { appwrite } from "@/appwrite";
 
 export const DEFAULT_BASE_SETUP = {
   foldGutter: false,
@@ -22,16 +23,7 @@ export const DEFAULT_BASE_SETUP = {
 export const clsx = (...classNames: string[]) =>
   classNames.filter(Boolean).join(" ");
 
-export function SnippetCodeEditor({
-  snippet,
-}: {
-  snippet: {
-    id: string;
-    code: string;
-    title: string;
-    ownerId: string;
-  };
-}) {
+export function SnippetCodeEditor({ snippet }: any) {
   const router = useRouter();
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [fileName, setFileName] = React.useState(snippet.title);
@@ -40,45 +32,51 @@ export function SnippetCodeEditor({
 
   async function handleUpdate() {
     setIsLoading(true);
-    const res = await fetch(`/api/snippet/${snippet.id}`, {
-      method: "PATCH",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        code,
-        fileName,
-        snippetId: snippet.id,
-      }),
-    });
-    if (res.ok) {
-      setIsLoading(false);
-      toast.success("Snippet updated successfully");
-      setUpdate(false);
-    } else {
-      setIsLoading(false);
-      toast.error("Something went wrong");
-    }
 
-    router.refresh();
+    const promise = appwrite.databases.updateDocument(
+      `${process.env.NEXT_PUBLIC_REACT_APP_DATABASE_ID}`,
+      `${process.env.NEXT_PUBLIC_REACT_APP_COLLECTION_ID}`,
+      snippet.$id,
+      {
+        code: code,
+        title: fileName,
+        ownerId: snippet.ownerId,
+      }
+    );
+
+    promise
+      .then((res) => {
+        setIsLoading(false);
+        toast.success("Snippet updated successfully");
+        setUpdate(false);
+        router.refresh();
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        toast.error("Something went wrong");
+      });
   }
 
   async function handleDelete() {
     setIsLoading(true);
-    const res = await fetch(`/api/snippet/${snippet.id}`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    if (res.ok) {
-      setIsLoading(false);
-      toast.success("Snippet deleted successfully");
-      router.push("/dashboard/saved-snippet");
-    } else {
-      setIsLoading(false);
-      toast.error("Something went wrong");
-    }
+
+    const promise = appwrite.databases.deleteDocument(
+      `${process.env.NEXT_PUBLIC_REACT_APP_DATABASE_ID}`,
+      `${process.env.NEXT_PUBLIC_REACT_APP_COLLECTION_ID}`,
+      snippet.$id
+    );
+
+    promise
+      .then((res) => {
+        setIsLoading(false);
+        toast.success("Snippet deleted successfully");
+        router.push("/dashboard/saved-snippet");
+        router.refresh();
+      })
+      .catch((err) => {
+        setIsLoading(false);
+        toast.error("Something went wrong");
+      });
   }
 
   return (
